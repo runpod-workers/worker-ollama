@@ -24,10 +24,10 @@ curl -X POST "https://api.runpod.ai/v2/<ENDPOINT_ID>/runsync" \
 ## Choosing a model
 
 > [!IMPORTANT]
-> **`Hugging Face GGUF Repo` (`HF_MODEL`) is not the same input as `Model` (`OLLAMA_MODEL`).**
+> **`Hugging Face Model` (`HF_MODEL`) is not the same input as `Ollama Model` (`OLLAMA_MODEL`), and neither is the endpoint's own Model field, which controls Runpod's model caching.**
 >
-> - **`Model`** (`OLLAMA_MODEL`) takes an *Ollama* model name: `llama3.2:3b`, or `hf.co/<repo>:<quant>` to use Ollama's own Hugging Face puller.
-> - **`Hugging Face GGUF Repo`** (`HF_MODEL`) takes a *Hugging Face repo id*: `unsloth/Qwen3-8B-GGUF`. This is the input that works with Runpod's model store.
+> - **`Ollama Model`** (`OLLAMA_MODEL`) takes an *Ollama* model name: `llama3.2:3b`, or `hf.co/<repo>:<quant>` to use Ollama's own Hugging Face puller.
+> - **`Hugging Face Model`** (`HF_MODEL`) takes a *Hugging Face repo id*: `unsloth/Qwen3-8B-GGUF`. This is the input that works with Runpod's model store.
 >
 > **When both are set, `HF_MODEL` wins and `OLLAMA_MODEL` is ignored entirely.** The worker log says so at startup.
 >
@@ -38,7 +38,7 @@ curl -X POST "https://api.runpod.ai/v2/<ENDPOINT_ID>/runsync" \
 | Input | Required | Behaviour |
 |---|---|---|
 | `HF_MODEL` | — | Repo id, e.g. `unsloth/Qwen3-8B-GGUF`. Also accepts `hf.co/<org>/<repo>`, a full `huggingface.co` URL, and a trailing `:<quant>` tag — all normalised to a bare repo id. Must contain `.gguf` files; a safetensors-only repo fails with an error listing what was found. |
-| `HF_QUANTIZATION` | no | Matched against filenames on `-`, `_`, `.` and `/` boundaries, case-insensitive. `Q4_K_M` does not match `Q4_K_S`, and `Q4` does not match `Q4_K_M`. No match or an ambiguous match → error listing every quantization in the repo. **Leave it empty and the smallest GGUF in the repo is used.** |
+| `HF_QUANTIZATION` | no | Matched against filenames on `-`, `_`, `.` and `/` boundaries, case-insensitive. `Q4_K_M` does not match `Q4_K_S`, and `Q4` does not match `Q4_K_M`. No match or an ambiguous match → error listing every quantization in the repo. **Leave it empty and `Q4_K_M` is used**, falling back to the smallest GGUF only when the repo has no `Q4_K_M`. |
 | `HF_MODEL_FILE` | no | Exact filename, e.g. `Qwen3-8B-Q4_K_M.gguf`. Overrides `HF_QUANTIZATION`. |
 
 ```
@@ -168,7 +168,7 @@ Non-streaming responses return Ollama's native response object:
 | Variable | Default | Description |
 |---|---|---|
 | `HF_MODEL` | — | Hugging Face GGUF repo id. **Takes precedence over `OLLAMA_MODEL`.** |
-| `HF_QUANTIZATION` | smallest in repo | Which GGUF quantization to load (`Q4_K_M`, `Q8_0`, `IQ4_XS`, ...) |
+| `HF_QUANTIZATION` | `Q4_K_M` | Which GGUF quantization to load (`Q4_K_M`, `Q8_0`, `IQ4_XS`, ...) |
 | `HF_MODEL_FILE` | — | Exact `.gguf` filename; overrides `HF_QUANTIZATION` |
 | `HF_TOKEN` | — | Hugging Face token for gated/private repos, used only when the worker downloads the model itself |
 | `OLLAMA_MODEL` | — | Ollama model pulled at worker startup; ignored when `HF_MODEL` is set |

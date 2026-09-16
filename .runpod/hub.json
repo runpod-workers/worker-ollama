@@ -25,7 +25,7 @@
         "input": {
           "name": "Hugging Face Model Quantization (Optional)",
           "type": "string",
-          "description": "Which GGUF quantization to load from the Hugging Face repo, e.g. 'Q4_K_M', 'Q8_0', 'IQ4_XS', 'BF16'. Optional: when left empty, a ':<quant>' tag on the repo above is used if present, otherwise the smallest GGUF in the repo, which is the fastest to load but the lowest quality. Set it explicitly to control quality and VRAM use. Ignored unless 'Hugging Face Model' is set.",
+          "description": "Which GGUF quantization to load from the Hugging Face repo, e.g. 'Q4_K_M', 'Q8_0', 'IQ4_XS', 'BF16'. Optional: when left empty, a ':<quant>' tag on the repo above is used if present, otherwise Q4_K_M, the same default Ollama's own puller uses. Set it explicitly to control quality and VRAM use. Ignored unless 'Hugging Face Model' is set.",
           "default": "",
           "advanced": false
         }
