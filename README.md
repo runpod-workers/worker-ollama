@@ -76,6 +76,8 @@ For HuggingFace repos referenced this way, specify the quant as a tag (`:Q4_K_M`
 
 **Sizing tip:** the VRAM needed for weights is roughly the size of the GGUF file plus ~15% overhead for KV cache and activations. Pick a GPU with headroom above that.
 
+**Default hardware:** the Hub listing defaults to the 80 GB and 96 GB pools (`BLACKWELL_96`, `ADA_80_PRO`, `AMPERE_80`, i.e. RTX PRO 6000, H100 and A100). That is deliberately generous: the model inputs above invite 27B+ GGUFs, and a 24 GB card silently spills those to CPU, which turns the first request into a multi-minute load that usually times out. Pick a smaller pool on the endpoint if you know your model fits.
+
 ## Runpod model caching
 
 Set the endpoint's **Model** field to the *same* repo as `HF_MODEL`. Runpod then pre-downloads it to `/runpod-volume/huggingface-cache/hub/models--<org>--<name>/snapshots/<hash>/` **before the worker starts**, and doesn't bill you for the download. The worker finds it there and registers it with Ollama without fetching anything.
@@ -175,6 +177,7 @@ Non-streaming responses return Ollama's native response object:
 | `RUNPOD_MODEL_CACHE_DIR` | `/runpod-volume/huggingface-cache/hub` | Where Runpod's model store mounts its cache |
 | `OLLAMA_TEMPLATE` | — | Chat template override used when registering a Hugging Face GGUF |
 | `OLLAMA_KEEP_ALIVE` | `-1` (forever) | How long models stay loaded in VRAM |
+| `OLLAMA_LOAD_TIMEOUT` | `60m` | How long Ollama waits for a model to load into memory before failing the request. Ollama's own default is `5m`, which a large model on a fresh worker can exceed |
 
 ## Storage and disk sizing
 

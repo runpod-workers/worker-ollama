@@ -7,7 +7,7 @@
   "config": {
     "runsOn": "GPU",
     "containerDiskInGb": 100,
-    "gpuIds": "ADA_24",
+    "gpuIds": "BLACKWELL_96,ADA_80_PRO,AMPERE_80",
     "gpuCount": 1,
     "env": [
       {
@@ -160,8 +160,8 @@
         "input": {
           "name": "Load Timeout",
           "type": "string",
-          "description": "Maximum time allowed for a model to load (e.g. '5m', '10m'). Increase for large models.",
-          "default": "5m",
+          "description": "Maximum time Ollama waits for a model to load into memory before failing the request (e.g. '10m', '60m'). Defaults to 60m so a large model loading on a fresh worker is not killed by Ollama's built-in 5m limit; only lower it if you want faster failure on misconfigured models.",
+          "default": "60m",
           "advanced": true
         }
       },
