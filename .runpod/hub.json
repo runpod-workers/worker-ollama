@@ -33,11 +33,11 @@
       {
         "key": "OLLAMA_MODEL",
         "input": {
-          "name": "Ollama Model (Optional)",
+          "name": "Ollama Model",
           "type": "string",
           "description": "Ollama model to pull at startup. Any Ollama library model (e.g. 'llama3.2:3b') or an Ollama-style HuggingFace reference with a quant tag (e.g. 'hf.co/prism-ml/Bonsai-27B-gguf:Q1_0'). Ignored when 'Hugging Face GGUF Repo' is set. If both are left empty the worker falls back to 'llama3.2:3b'.",
           "default": "",
-          "advanced": false
+          "advanced": true
         }
       },
       {
