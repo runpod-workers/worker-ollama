@@ -7,15 +7,15 @@
   "config": {
     "runsOn": "GPU",
     "containerDiskInGb": 100,
-    "gpuIds": "ADA_24",
+    "gpuIds": "BLACKWELL_96,ADA_80_PRO,AMPERE_80",
     "gpuCount": 1,
     "env": [
       {
         "key": "HF_MODEL",
         "input": {
-          "name": "Hugging Face GGUF Repo",
+          "name": "Hugging Face Model (Optional)",
           "type": "huggingface",
-          "description": "Hugging Face repo containing GGUF files, e.g. 'unsloth/Qwen3-8B-GGUF'. A 'hf.co/<org>/<repo>' form, a full huggingface.co URL, and a trailing ':<quant>' tag are all accepted and normalised. NOT the same field as 'Model': 'Model' takes an Ollama model name, this takes a Hugging Face repo id. When both are set, this one wins and 'Model' is ignored. Must be a GGUF repo -- safetensors-only repos are rejected with an error. Set the endpoint's Model field to this same repo so Runpod's model store pre-downloads it for free.",
+          "description": "Hugging Face repo containing GGUF files, e.g. 'unsloth/Qwen3-8B-GGUF'. A 'hf.co/<org>/<repo>' form, a full huggingface.co URL, and a trailing ':<quant>' tag are all accepted and normalised. NOT the same field as 'Ollama Model': that one takes an Ollama model name, this takes a Hugging Face repo id. When both are set, this one wins and 'Ollama Model' is ignored. Also separate from the endpoint's own Model field, which controls Runpod's model caching. Must be a GGUF repo -- safetensors-only repos are rejected with an error. Set the endpoint's Model field to this same repo so Runpod's model store pre-downloads it for free.",
           "default": "",
           "advanced": false
         }
@@ -23,9 +23,9 @@
       {
         "key": "HF_QUANTIZATION",
         "input": {
-          "name": "Quantization",
+          "name": "Hugging Face Model Quantization (Optional)",
           "type": "string",
-          "description": "Which GGUF quantization to load from the Hugging Face repo, e.g. 'Q4_K_M', 'Q8_0', 'IQ4_XS', 'BF16'. Optional: when left empty, a ':<quant>' tag on the repo above is used if present, otherwise the smallest GGUF in the repo, which is the fastest to load but the lowest quality. Set it explicitly to control quality and VRAM use. Ignored unless 'Hugging Face GGUF Repo' is set.",
+          "description": "Which GGUF quantization to load from the Hugging Face repo, e.g. 'Q4_K_M', 'Q8_0', 'IQ4_XS', 'BF16'. Optional: when left empty, a ':<quant>' tag on the repo above is used if present, otherwise Q4_K_M, the same default Ollama's own puller uses. Set it explicitly to control quality and VRAM use. Ignored unless 'Hugging Face Model' is set.",
           "default": "",
           "advanced": false
         }
@@ -33,9 +33,9 @@
       {
         "key": "OLLAMA_MODEL",
         "input": {
-          "name": "Model",
+          "name": "Ollama Model (Optional)",
           "type": "string",
-          "description": "Ollama model to pull at startup. Any Ollama library model (e.g. 'llama3.2:3b') or an Ollama-style HuggingFace reference with a quant tag (e.g. 'hf.co/prism-ml/Bonsai-27B-gguf:Q1_0'). Ignored when 'Hugging Face GGUF Repo' is set. If both are left empty the worker falls back to 'llama3.2:3b'.",
+          "description": "Ollama model to pull at startup. Any Ollama library model (e.g. 'llama3.2:3b') or an Ollama-style HuggingFace reference with a quant tag (e.g. 'hf.co/prism-ml/Bonsai-27B-gguf:Q1_0'). Ignored when 'Hugging Face Model' is set. If both are left empty the worker falls back to 'llama3.2:3b'.",
           "default": "",
           "advanced": false
         }
@@ -160,8 +160,8 @@
         "input": {
           "name": "Load Timeout",
           "type": "string",
-          "description": "Maximum time allowed for a model to load (e.g. '5m', '10m'). Increase for large models.",
-          "default": "5m",
+          "description": "Maximum time Ollama waits for a model to load into memory before failing the request (e.g. '10m', '60m'). Defaults to 60m so a large model loading on a fresh worker is not killed by Ollama's built-in 5m limit; only lower it if you want faster failure on misconfigured models.",
+          "default": "60m",
           "advanced": true
         }
       },
