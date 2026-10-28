@@ -2,3 +2,7 @@ runpod~=1.7
 requests~=2.32
 huggingface_hub~=0.35
 hf_transfer~=0.1
+# Floor, not a pin: certifi only arrives transitively via requests, so a cached
+# build layer can keep an old copy. Below 2026.10.19 the bundle trusts the
+# compromised emSign ECC Root CA - G3 (GHSA-6q48-6c7w-9gw2).
+certifi>=2026.10.19
