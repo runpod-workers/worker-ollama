@@ -45,7 +45,7 @@
         "input": {
           "name": "Hugging Face Token",
           "type": "string",
-          "description": "Hugging Face access token, required only for gated or private models. This is separate from the Hugging Face token you enter in the endpoint's Model Caching settings: that one is used by Runpod for the pre-download, this one is used by the worker when it has to fetch the model itself. Leave empty for public models.",
+          "description": "Hugging Face access token the worker uses when it fetches the model itself. Required for gated or private models, and recommended for public ones: Hugging Face rate-limits anonymous downloads, which can slow worker startup or make it fail. This is separate from the token in the endpoint's Model Caching settings, which Runpod uses for the pre-download.",
           "default": "",
           "advanced": true
         }
